@@ -95,9 +95,6 @@ class pegasos(object):
                 
                 part2 += max(0,1-(label * self.dot(weights,vector)))
                 
-                #WEIGHTS ALL NEGATIVE. THEY GET CLOSER TO 0 BUT NEVER BECOME POSITIVE. SEE PROFESSOR.
-                #print str(weights)
-                
                 del u[:]
                 
             #evaluate objective function
