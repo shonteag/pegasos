@@ -43,3 +43,16 @@ elif "-test" in sys.argv:
     weights = peggy.pegasos_svm_train(train_vectors, train_emails,lambda_val)
     
     peggy.pegasos_svm_test(weights,test_vectors,test_emails)
+    
+#---------END TESTING ON NEW DATA--------
+
+else:
+    print "Program Arguments:"
+    print "  -validate     : Run on training data. 4000 training, 1000 validation"
+    print "  -test         : Run on test data. Use 5000 training set, 1000 test set"
+    print "  -silent       : Only PEGASOS algorithm will output to terminal"
+    
+    
+    
+    
+    
