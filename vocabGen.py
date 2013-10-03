@@ -88,11 +88,7 @@ class vocabGen(object):
         #drop all entries with value less than 30.
         self.drop_low_liers();
         print "   ->" + str(len(self.vocab)) + " words in vocab list.";
-        #write the vocab list file
-        self.write_list_file();
-        #return the list to the main program
-        #return vocab;
-        
+       
         raw_data.close();
         return self.vocab,self.emails;
     #END BUILD_VOCAB
