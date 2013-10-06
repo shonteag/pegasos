@@ -8,12 +8,12 @@ class pegasos(object):
     #public vars
     weights = []
     objective = []
-    MAX_ITER = 20
+    MAX_ITER = 5
     
     def __init__(self):
         #initialize public vars and structs
         weights = []
-        MAX_ITER = 20
+        MAX_ITER = 5
         objective = [float(0) for i in range(0,MAX_ITER)]
 
     
@@ -177,6 +177,8 @@ class pegasos(object):
                 #print str(classifiers[max_index]) + " : " + str(actual_y)
         
         print " ->Complete. " + str(miss) + " misses. Classification error: " + str(float(miss) / float(len(test_data)))
+        
+        
         return miss
 
     
