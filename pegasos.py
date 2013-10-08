@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 
-import sys,operator,time,math
+import sys,operator,time,math,decimal
 
 class pegasos(object):
     #public vars
     weights = []
     objective = []
-    MAX_ITER = 10
+    MAX_ITER = 20
     
     def __init__(self):
         #initialize public vars and structs
         weights = []
-        MAX_ITER = 10
+        MAX_ITER = 20
         objective = [float(0) for i in range(0,MAX_ITER)]
 
     
@@ -45,12 +45,16 @@ class pegasos(object):
         return result
     
     def eval(self, weights, m, lambda_val, part2):
-        objective_val = ((lambda_val/2) * math.pow(self.magnitude(weights),2)) + part2
+        objective_val = ((lambda_val/2) * math.pow(self.magnitude(weights),2)) + (float(1)/float(m)) * part2
         return objective_val
     
+    def hinge_loss(self, m, part2):
+        return (float(1)/float(m)) * part2
     
     
-    def pegasos_svm_train(self, vectors, email_data, lambda_val): #lambda_val is the regularization constant
+    
+    
+    def pegasos_svm_train(self, vectors, email_data, lambda_val, sv): #lambda_val is the regularization constant
         print "Training PEGASOS algorithm..."
         
         weights = [0 for i in range(0,len(vectors))]
@@ -60,6 +64,7 @@ class pegasos(object):
         iteration = 1
         t = 0
         eta = 0
+        total_hinge_loss = 0
         while True:
             
             propclass = 0
@@ -75,8 +80,6 @@ class pegasos(object):
                 
                 u = [0 for i in range(0,len(vectors))]
                 
-                #print "LABEL: " + str(label)
-                
                 if (label * self.dot(weights,vector)) < 1:
                     #print "< 1: " + str(label * self.dot(weights,vector))
                     #modify weight vector accordingly
@@ -89,7 +92,6 @@ class pegasos(object):
                     propclass += 1
                 
                 minimum = min(1,(1/(math.sqrt(lambda_val)))/self.magnitude(u))
-                #print "MIN: " + str(minimum)
                 temp = self.scalar_mult(minimum,u)
                 weights = temp[:]
                 
@@ -99,12 +101,31 @@ class pegasos(object):
                 
             #evaluate objective function
             objective_val = self.eval(weights, len(vectors), lambda_val, part2)
-            print "   ->Iteration " + str(iteration) +". Objective Value = " + str(objective_val)
+            hinge_loss = self.hinge_loss(len(vectors), part2)
+            print "   ->Iteration " + str(iteration)
+            print "       Objective Val = " + str(objective_val)
+            print "       Hinge Loss = " + str(hinge_loss)
+        
+            total_hinge_loss += hinge_loss
         
             if iteration >= self.MAX_ITER:
                 break
         
             iteration += 1
+
+        print " ->Average hinge loss = " + str((total_hinge_loss / float(self.MAX_ITER)))
+        
+        #calculate support vectors
+        if sv:
+            print " ->Calculating number of support vectors..."
+            num_sv = 0
+            for index,vector in enumerate(vectors):
+                a = decimal.Decimal(self.dot(weights,vector))
+                a_round = round(a,2)
+                if (a_round == 1) or (a_round == -1):
+                    num_sv += 1
+                
+            print "  ->Complete. Found " + str(num_sv) + " support vectors."
         
         return weights
     
